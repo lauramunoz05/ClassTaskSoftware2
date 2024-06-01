@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createBrowserRouter, RouterProvider, } from "react-router-dom";
 import axios from 'axios'
 import './App.css'
 import Register from './components/Authentication/Register'
@@ -12,7 +13,7 @@ import TaskForm from './components/TaskComponent/TaskForm'
 
 function App() {
   const [users, setUsers] = useState([])
-  const [editingUser, setEditingUsers] = useState(null)
+  const [editingUser, setEditingUser] = useState(null)
 
   const [subjects, setSubjects] = useState([])
   const [editingSubject, setEditingSubject] = useState(null)
@@ -40,7 +41,7 @@ function App() {
   //Permite crear un usuario o actualizarlo
   const handleCreateOrUpdateUser = async (userData) => {
     if (editingUser) {
-      await axios.put(`http://localhost:8080/api/users/${editingUser.id}`, userData)      
+      await axios.put(`http://localhost:8080/api/users/${editingUser.id}`, userData)
     } else {
       await axios.post(`http://localhost:8080/api/users`, userData)
     }
@@ -49,12 +50,12 @@ function App() {
   //Permite editar un usuario  
   const handelEditUser = (user) => {
     //Limpia el estado
-    setEditingUsers(user)
+    setEditingUser(user)
   }
 
   //Permite eliminar un usuario  a partir de un id 
-  const handelDeleteUser = async(userId) => {
-    await  axios.delete(`http://localhost:8080/api/users/${userId}`)
+  const handelDeleteUser = async (userId) => {
+    await axios.delete(`http://localhost:8080/api/users/${userId}`)
     fetchUsers()
   }
 
@@ -85,8 +86,8 @@ function App() {
     setEditingSubject(subject)
   }
 
-  const handelDeleteSubject = async(subjectId) => {
-    await  axios.delete(`http://localhost:8080/api/subjects/${subjectId}`)
+  const handelDeleteSubject = async (subjectId) => {
+    await axios.delete(`http://localhost:8080/api/subjects/${subjectId}`)
     fetchSubjects()
   }
 
@@ -117,50 +118,80 @@ function App() {
     setEditingTask(task)
   }
 
-  const handelDeleteTask = async(taskId) => {
-    await  axios.delete(`http://localhost:8080/api/tasks/${taskId}`)
+  const handelDeleteTask = async (taskId) => {
+    await axios.delete(`http://localhost:8080/api/tasks/${taskId}`)
     fetchTasks()
   }
 
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: 
+      <div className='App'>
+        <fieldset>
+            <Register />
+          </fieldset>
+      </div>,
+    },
+
+    {
+      path: "/login",
+      element: 
+      <div className='App'>
+          <fieldset>
+            <Login />
+          </fieldset>
+      </div>,
+    },
+
+    {
+      path: "/home",
+      element:
+        <div className='App'>
+          <h1>ClassTasks</h1>
+          <br />
+          <fieldset>
+            <h2>Users</h2>
+            <UserTable users={users} onEdit={handelEditUser} onDelete={handelDeleteUser} />
+            <h3>{editingUser ? 'Edit User' : 'Create new user'}</h3>
+            <UserForm onSubmit={handleCreateOrUpdateUser} initialUsers={editingUser} />
+          </fieldset>
+
+          <br />
+          <fieldset>
+            <h2>Subjects</h2>
+            <SubjectTable subjects={subjects} onEdit={handelEditSubject} onDelete={handelDeleteSubject} />
+            <h3>{editingSubject ? 'Edit Subject' : 'Create new subject'}</h3>
+            <SubjectForm onSubmit={handleCreateOrUpdateSubject} initialSubject={editingSubject} />
+          </fieldset>
+
+          <br />
+          <fieldset>
+            <h2>Tasks</h2>
+            <TaskTable tasks={tasks} onEdit={handelEditTask} onDelete={handelDeleteTask} />
+            <h3>{editingTask ? 'Edit task' : 'Create new task'}</h3>
+            <TaskForm onSubmit={handleCreateOrUpdateTask} initialTask={editingTask} />
+          </fieldset>
+        </div>,
+    }
+  ]);
+
   return (
-
-    <div className='App'>
-
-      <fieldset>
-        <Register />
-      </fieldset>
-
-      <fieldset>
-        <Login />
-      </fieldset>
-
-      <h1>ClassTasks</h1>
+    <>
+      <header>
+        <nav>
+          <ul>
+            <li> <a href="/">Register</a> </li>
+            <li> <a href="/login">LogIn</a> </li>
+            <li> <a href="/home">Home</a> </li>
+          </ul>
+        </nav>
+      </header>
       <br />
-      <fieldset>
-        <h2>Users</h2>
-        <UserTable users={users} onEdit={handelEditUser} onDelete={handelDeleteUser} />
-        <h3>{editingUser ? 'Edit User' : 'Create new user'}</h3>
-        <UserForm onSubmit={handleCreateOrUpdateUser} initialUsers={editingUser} />
-      </fieldset>
-
-     <br />
-     <fieldset>      
-        <h2>Subjects</h2>
-        <SubjectTable subjects={subjects} onEdit={handelEditSubject} onDelete={handelDeleteSubject} />
-        <h3>{editingSubject ? 'Edit Subject' : 'Create new subject'}</h3>
-        <SubjectForm onSubmit={handleCreateOrUpdateSubject} initialSubject={editingSubject} />
-     </fieldset>
-
       <br />
-      <fieldset>
-        <h2>Tasks</h2>
-        <TaskTable tasks={tasks} onEdit={handelEditTask} onDelete={handelDeleteTask} />
-        <h3>{editingTask ? 'Edit task' : 'Create new task'}</h3>
-        <TaskForm onSubmit={handleCreateOrUpdateTask} initialTask={editingTask} />
-      </fieldset>
-    </div>
-
-  )
+      <RouterProvider router={router} />
+    </>    
+  )  
 }
 
 export default App

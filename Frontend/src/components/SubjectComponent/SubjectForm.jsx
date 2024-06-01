@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function SubjectForm ({onSubmit}) {
+function SubjectForm ({ onSubmit }) {
 
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')

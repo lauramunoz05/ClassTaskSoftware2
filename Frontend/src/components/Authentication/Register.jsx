@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { firebaseApp } from '../../../firebaseConfig' 
+import { Link } from 'react-router-dom'
 
 function Register () {
 
@@ -30,6 +31,7 @@ function Register () {
             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             <button type="submit" onClick={handleRegister}>Register</button>
             { errorMessage &&  <p>{errorMessage}</p> }
+
         </div>
     )
 }
