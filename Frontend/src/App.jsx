@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import './App.css'
+import Register from './components/Authentication/Register'
+import Login from './components/Authentication/Login'
 import UserTable from './components/UserComponent/UserTable'
 import UserForm from './components/UserComponent/UserForm'
 import SubjectTable from './components/SubjectComponent/SubjectTable'
@@ -123,6 +125,15 @@ function App() {
   return (
 
     <div className='App'>
+
+      <fieldset>
+        <Register />
+      </fieldset>
+
+      <fieldset>
+        <Login />
+      </fieldset>
+
       <h1>ClassTasks</h1>
       <br />
       <fieldset>
